@@ -15,6 +15,7 @@ import (
 	"github.com/yorkie-team/yorkie/test/helper"
 	"github.com/yorkie-team/yorkie/yorkie/backend"
 	"github.com/yorkie-team/yorkie/yorkie/backend/db/mongo"
+	"github.com/yorkie-team/yorkie/yorkie/backend/sync/etcd"
 	"github.com/yorkie-team/yorkie/yorkie/rpc"
 )
 
@@ -46,6 +47,8 @@ func TestMain(m *testing.M) {
 		YorkieDatabase:       helper.TestDBName(),
 		ConnectionTimeoutSec: helper.MongoConnectionTimeoutSec,
 		PingTimeoutSec:       helper.MongoPingTimeoutSec,
+	}, &etcd.Config{
+		Endpoints: helper.ETCDEndpoints,
 	})
 	if err != nil {
 		log.Fatal(err)

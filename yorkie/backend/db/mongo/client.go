@@ -48,8 +48,8 @@ type Client struct {
 	client *mongo.Client
 }
 
-// NewClient creates an instance of Client.
-func NewClient(conf *Config) (*Client, error) {
+// Dial creates an instance of Client and dials the given MongoDB.
+func Dial(conf *Config) (*Client, error) {
 	ctx, cancel := context.WithTimeout(
 		context.Background(),
 		conf.ConnectionTimeoutSec*gotime.Second,
@@ -78,7 +78,8 @@ func NewClient(conf *Config) (*Client, error) {
 		return nil, err
 	}
 
-	log.Logger.Infof("connected, URI: %s, DB: %s", conf.ConnectionURI, conf.YorkieDatabase)
+	log.Logger.Infof("MongoDB connected, URI: %s, DB: %s", conf.ConnectionURI,
+		conf.YorkieDatabase)
 
 	return &Client{
 		config: conf,
@@ -538,7 +539,7 @@ func (c *Client) UpdateAndFindMinSyncedTicket(
 	}
 
 	// 03. find ticket by seq.
-	// TODO We need to find a way to not access `changes` collection.
+	// TODO: We need to find a way to not access `changes` collection.
 	ticket, err := c.findTicketByServerSeq(ctx, docID, syncedSeqInfo.ServerSeq)
 	if err != nil {
 		return nil, err
